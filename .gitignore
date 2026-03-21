@@ -1,0 +1,10 @@
+# API Keys and Credentials
+nassqs-api-key.txt
+
+# R
+.Rhistory
+.Rapp.history
+.RData
+.Ruserdata
+*.Rproj
+

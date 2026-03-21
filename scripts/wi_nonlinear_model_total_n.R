@@ -6,7 +6,7 @@
 #
 #   y  = corn_grain_yield  (county corn grain yield, bu/acre)
 #   X1 = OM_mean           (mean soil organic matter, %)
-#   X2 = N_rate_scaled     (farm N fertilizer, 100 kg per planted corn acre)
+#   X2 = N_scaled          (farm N fertilizer, millions of kg)
 #
 # Note: c is reparametrized as exp(c0 + c1*X1) to guarantee the
 #       decay rate is strictly positive. c0 and c1 are estimated
@@ -117,13 +117,9 @@ df_wi_corn_acres[, corn_acres := as.numeric(gsub(",", "", corn_acres))]
 panel <- om_data |>
   inner_join(n_annual, by = c("county_fips", "year")) |>
   inner_join(df_wi_corn_yield, by = c("county_fips", "year")) |>
-  inner_join(df_wi_corn_acres, by = c("county_fips", "year")) |>
-  filter(!is.na(OM_mean), !is.na(N_kg), !is.na(corn_grain_yield), !is.na(corn_acres),
-        OM_mean > 0, N_kg > 0, corn_grain_yield > 0, corn_acres > 0) |>
-  mutate(
-    N_rate_kg_acre = N_kg / corn_acres,
-    N_rate_scaled = N_rate_kg_acre / 100
-  )
+  filter(!is.na(OM_mean), !is.na(N_kg), !is.na(corn_grain_yield),
+        OM_mean > 0, N_kg > 0, corn_grain_yield > 0) |>
+  mutate(N_scaled = N_kg / 1e6)
 
 cat(sprintf("Panel: %d obs | %d counties | %s–%s\n",
             nrow(panel), n_distinct(panel$county),
@@ -151,7 +147,7 @@ start_vals <- list(
 )
 
 fit <- nlsLM(
-  corn_grain_yield ~ model_fn(OM_mean, N_rate_scaled, a0, a1, b0, b1, c0, c1),
+  corn_grain_yield ~ model_fn(OM_mean, N_scaled, a0, a1, b0, b1, c0, c1),
   data    = panel,
   start   = start_vals,
   control = nls.lm.control(maxiter = 2000, ftol = 1e-12, ptol = 1e-12)
@@ -218,18 +214,17 @@ p1 <- ggplot(panel, aes(x = corn_grain_yield, y = yield_fitted)) +
   theme(plot.title = element_text(face = "bold"), panel.background = element_rect(fill = "#f9f9f9"))
 
 ## B — Response over OM at three N levels
-N_quants <- quantile(panel$N_rate_scaled, c(0.10, 0.50, 0.90))
+N_quants <- quantile(panel$N_scaled, c(0.10, 0.50, 0.90))
 OM_seq   <- seq(quantile(panel$OM_mean, 0.02), quantile(panel$OM_mean, 0.98), length.out = 300)
 
 surface_b <- expand.grid(OM_mean = OM_seq,
                           N_label = c("Low N (10th pct)","Median N (50th pct)","High N (90th pct)")) |>
-  mutate(N_rate_scaled = dplyr::case_when(
+  mutate(N_scaled = dplyr::case_when(
     N_label == "Low N (10th pct)"  ~ N_quants[1],
     N_label == "Median N (50th pct)" ~ N_quants[2],
     N_label == "High N (90th pct)" ~ N_quants[3]
   ),
-  N_rate_kg_acre = 100 * N_rate_scaled,
-  yield_fitted = model_fn(OM_mean, N_rate_scaled, params["a0"], params["a1"],
+  yield_fitted = model_fn(OM_mean, N_scaled, params["a0"], params["a1"],
                       params["b0"], params["b1"], params["c0"], params["c1"]),
   N_label = factor(N_label, levels = c("Low N (10th pct)","Median N (50th pct)","High N (90th pct)")))
 
@@ -246,30 +241,31 @@ p2 <- ggplot(surface_b, aes(x = OM_mean, y = yield_fitted, color = N_label)) +
 
 ## C — Response over N at three OM levels
 OM_quants <- quantile(panel$OM_mean, c(0.10, 0.50, 0.90))
-N_seq     <- seq(quantile(panel$N_rate_kg_acre, 0.02), quantile(panel$N_rate_kg_acre, 0.98), length.out = 300)
+N_seq     <- seq(quantile(panel$N_scaled, 0.02), quantile(panel$N_scaled, 0.98), length.out = 300)
 
-surface_c <- expand.grid(N_rate_kg_acre = N_seq,
+surface_c <- expand.grid(N_scaled = N_seq,
                           OM_label = c("Low OM (10th pct)","Median OM (50th pct)","High OM (90th pct)")) |>
   mutate(OM_mean = dplyr::case_when(
     OM_label == "Low OM (10th pct)"    ~ OM_quants[1],
     OM_label == "Median OM (50th pct)" ~ OM_quants[2],
     OM_label == "High OM (90th pct)"   ~ OM_quants[3]
   ),
-  N_rate_scaled = N_rate_kg_acre / 100,
-  yield_fitted = model_fn(OM_mean, N_rate_scaled, params["a0"], params["a1"],
+  yield_fitted = model_fn(OM_mean, N_scaled, params["a0"], params["a1"],
                       params["b0"], params["b1"], params["c0"], params["c1"]),
   OM_label = factor(OM_label, levels = c("Low OM (10th pct)","Median OM (50th pct)","High OM (90th pct)")))
 
-p3 <- ggplot(surface_c, aes(x = N_rate_kg_acre, y = yield_fitted, color = OM_label)) +
+p3 <- ggplot(surface_c, aes(x = N_scaled, y = yield_fitted, color = OM_label)) +
   geom_line(linewidth = 1.4) +
   scale_color_manual(values = c(LBLUE, BLUE, RED)) +
   labs(title = "C — Fitted Yield vs N Fertilizer | Three OM Levels",
-       x = "N Fertilizer (kg per planted corn acre)", y = "Fitted Corn Yield (bu/acre)",
+       x = "N Fertilizer (million kg)", y = "Fitted Corn Yield (bu/acre)",
        color = NULL) +
   theme_bw(base_size = 11) +
   theme(legend.position = "bottom",
         plot.title = element_text(face = "bold"),
         panel.background = element_rect(fill = "#f9f9f9"))
+
+
 
 ## D — Mean residual by year
 resid_yr <- panel |>
@@ -293,33 +289,31 @@ p4 <- ggplot(resid_yr, aes(x = year_num, y = mean_r)) +
 
 combined <- grid.arrange(p1, p2, p3, p4, ncol = 2,
   top = grid::textGrob(
-    "Wisconsin County Panel — Per Acre Corn Yield Model (1995–2017)\nP = (a\u2080+a\u2081·OM)[1−(b\u2080+b\u2081·OM)·exp(−exp(c\u2080+c\u2081·OM)·N)]",
+  "Wisconsin County Panel — Total N Corn Yield Model (1995–2017)\nP = (a\u2080+a\u2081·OM)[1−(b\u2080+b\u2081·OM)·exp(−exp(c\u2080+c\u2081·OM)·N)]",
     gp = grid::gpar(fontsize = 13, fontface = "bold")))
 
-ggsave("./output/figures/figure_wi_model_visuals.png", 
+ggsave("./output/figures/figure_wi_model_visuals_total_n.png", 
     combined,
     width = 14, height = 10, dpi = 150, bg = "white")
 
-
-## E — Contour map of OM–N tradeoff
+## E — Contour map of OM–N tradeoff (total N)
 OM_contour_seq <- seq(min(panel$OM_mean, na.rm = TRUE), max(panel$OM_mean, na.rm = TRUE), length.out = 140)
-N_contour_seq  <- seq(min(panel$N_rate_kg_acre, na.rm = TRUE), max(panel$N_rate_kg_acre, na.rm = TRUE), length.out = 140)
+N_contour_seq  <- seq(min(panel$N_scaled, na.rm = TRUE), max(panel$N_scaled, na.rm = TRUE), length.out = 140)
 
 surface_contour <- expand.grid(
   OM_mean = OM_contour_seq,
-  N_rate_kg_acre = N_contour_seq
+  N_scaled = N_contour_seq
 ) |>
   mutate(
-    N_rate_scaled = N_rate_kg_acre / 100,
-    yield_fitted = model_fn(OM_mean, N_rate_scaled, params["a0"], params["a1"],
+    yield_fitted = model_fn(OM_mean, N_scaled, params["a0"], params["a1"],
                             params["b0"], params["b1"], params["c0"], params["c1"])
   )
 
-p5 <- ggplot(surface_contour, aes(x = OM_mean, y = N_rate_kg_acre, fill = yield_fitted)) +
+p5 <- ggplot(surface_contour, aes(x = OM_mean, y = N_scaled, fill = yield_fitted)) +
   geom_raster(interpolate = TRUE) +
   geom_contour(
     data = surface_contour,
-    aes(x = OM_mean, y = N_rate_kg_acre, z = yield_fitted),
+    aes(x = OM_mean, y = N_scaled, z = yield_fitted),
     color = "white",
     alpha = 0.6,
     linewidth = 0.3,
@@ -327,7 +321,7 @@ p5 <- ggplot(surface_contour, aes(x = OM_mean, y = N_rate_kg_acre, fill = yield_
   ) +
   geom_point(
     data = panel,
-    aes(x = OM_mean, y = N_rate_kg_acre),
+    aes(x = OM_mean, y = N_scaled),
     inherit.aes = FALSE,
     color = "black",
     alpha = 0.20,
@@ -335,10 +329,10 @@ p5 <- ggplot(surface_contour, aes(x = OM_mean, y = N_rate_kg_acre, fill = yield_
   ) +
   scale_fill_gradient(low = BLUE, high = RED) +
   labs(
-    title = "E — Predicted Corn Yield Contours by OM and N",
+    title = "E — Predicted Corn Yield Contours by OM and Total N",
     subtitle = "Points show county-year observations",
     x = "Organic Matter (%)",
-    y = "N Fertilizer (kg per planted corn acre)",
+    y = "N Fertilizer (million kg)",
     fill = "Fitted\nYield"
   ) +
   theme_bw(base_size = 11) +
@@ -347,9 +341,8 @@ p5 <- ggplot(surface_contour, aes(x = OM_mean, y = N_rate_kg_acre, fill = yield_
     panel.background = element_rect(fill = "#f9f9f9")
   )
 
-
-ggsave("./output/figures/figure_wi_model_contour_om_n.png",
+ggsave("./output/figures/figure_wi_model_contour_om_n_total_n.png",
   p5,
   width = 10, height = 7, dpi = 180, bg = "white")
 
-write.csv(param_table, "./output/tables/table_wi_model_parameters.csv", row.names = FALSE)
+write.csv(param_table, "./output/tables/table_wi_model_parameters_total_n.csv", row.names = FALSE)

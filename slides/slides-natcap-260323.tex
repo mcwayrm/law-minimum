@@ -1,0 +1,311 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  This is the generic Beamer for Ryan McWay's presentations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Declaring document as beamer with attributes
+\documentclass[xcolor = x11names, compress, aspectratio = 169]{beamer}
+% Settings for appearance of \pause
+\setbeamercovered{transparent}
+
+%%%%%%%%%%%%%%%%  Dependencies %%%%%%%%%%%%%%%%%%%%%%%
+% Resize Figures
+\usepackage{graphicx}
+% Make Tables Fit Beamer Slide
+\usepackage{booktabs}
+\newcommand{\tinytable}[1]{\textcolor{black}{\tiny \input{#1} }}
+% Make Drawings
+\usepackage{tikz}
+\usetikzlibrary{decorations.fractals}
+% Allows to put greek letters outside of equations
+\usepackage{textgreek}
+% Allows for .gif
+\usepackage{movie15}
+\usepackage{epstopdf}
+\epstopdfDeclareGraphicsRule{.gif}{png}{.png}{convert gif:#1 png:\OutputFile}
+\AppendGraphicsExtensions{.gif}
+% Bibliography Style
+\usepackage[round]{natbib}
+% Change Text Color 
+\usepackage[dvipsnames]{xcolor}
+
+% Allow to Color in Tables
+\usepackage{colortbl}
+% Allow for PDFs in Latex Document
+    \usepackage{pdfpages}
+
+% Modelsumary requirements
+\usepackage{tabularray}
+\usepackage{float}
+\usepackage[normalem]{ulem}
+\UseTblrLibrary{booktabs}
+\UseTblrLibrary{siunitx}
+\newcommand{\tinytableTabularrayUnderline}[1]{\underline{#1}}
+\newcommand{\tinytableTabularrayStrikeout}[1]{\sout{#1}}
+\NewTableCommand{\tinytableDefineColor}[3]{\definecolor{#1}{#2}{#3}}
+
+% Math font 
+\usefonttheme[onlymath]{serif}
+
+% Remove Beamer Toggle bar 
+\beamertemplatenavigationsymbolsempty
+
+% Define the ``official'' UMN colors
+\xdefinecolor{GopherMaroon}{HTML}{7A0019}
+\xdefinecolor{GopherGold}{HTML}{FFCC33}
+\xdefinecolor{GopherLightGold}{HTML}{FFDE7A}
+\xdefinecolor{GopherDarkMaroon}{HTML}{5B0013}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%% Beamer Layout %%%%%%%%%%%%%%%%%%%%%%
+\useoutertheme[subsection = false, shadow]{miniframes}
+\useinnertheme{default}
+\usefonttheme{structureitalicserif}
+\usepackage{palatino}
+\definecolor{mypurple}{rgb}{.49,0,98}
+\setbeamerfont{title like}{shape = \scshape}
+\setbeamerfont{frametitle}{shape = \scshape}
+
+
+\setbeamercolor*{lower separation line head}{bg = GopherMaroon} 
+\setbeamercolor*{normal text}{fg = black,bg = white} 
+\setbeamercolor*{alerted text}{fg = GopherDarkMaroon} 
+\setbeamercolor*{example text}{fg = black} 
+\setbeamercolor*{structure}{fg = GopherDarkMaroon} 
+ 
+\setbeamercolor*{palette tertiary}{fg = GopherMaroon,bg = black!10} 
+\setbeamercolor*{palette quaternary}{fg = black,bg = black!10} 
+
+\renewcommand{\(}{\begin{columns}}
+\renewcommand{\)}{\end{columns}}
+\newcommand{\<}[1]{\begin{column}{#1}}
+\renewcommand{\>}{\end{column}}
+
+% Allows for Gifs
+\usepackage{animate}
+
+% Allows for Appendix Frames
+\usepackage{appendixnumberbeamer}
+
+% Specify Frame Number in Footer
+\setbeamertemplate{footline}
+{
+    \leavevmode %
+    \hbox{%
+        \begin{beamercolorbox}[wd = .333333\paperwidth, ht = 2.25ex, dp = 1ex, center]{Author Footer} %
+            % \usebeamerfont{Author Footer}\insertshortauthor{}
+            McWay, Gallagher
+        \end{beamercolorbox}
+        %
+        \begin{beamercolorbox}[wd = .333333\paperwidth, ht = 2.25ex, dp = 1ex, center]{Title Footer} %
+            % \usebeamerfont{Title Footer}\insertshorttitle{}
+            Law of the Minimum
+        \end{beamercolorbox}
+        %
+        \begin{beamercolorbox}[wd = .333333\paperwidth, ht = 2.25ex, dp = 1ex, right]{Date Footer} %
+            \usebeamerfont{Date Footer}\today \hspace*{2em}
+            \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+        \end{beamercolorbox}}
+        %
+        \vskip0pt %
+    }
+
+% Hyperlink Colors
+\hypersetup{
+    colorlinks,
+    citecolor = GopherMaroon,
+    linkcolor = black
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\beamerdefaultoverlayspecification{<+->}
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                Title Frame
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{\scshape Introduction}
+
+\begin{frame}
+    \fontfamily{cmr}
+    \title[Law of the Minimum]{
+    Soil Capital for Crop Production: \\ Law of the Minimum}
+    \author[McWay]{ 
+        Ryan McWay$^\dagger$
+        Nicholas Gallagher
+    }
+    \date{
+    	Glewwe Development Lab \\ 
+    	\small{University of Minnesota} \\
+    	\small{\textit{\today}}
+    }
+    \institute[\textit{UMN}]{
+        $^\dagger$\textit{Applied Economics, \\ 
+        University of Minnesota}
+    }
+    
+    \titlepage
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%      Motivation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Motivation}
+    \begin{frame}
+    \fontfamily{cmr}
+    \frametitle{Global Warming and Carbon Emissions}
+        \begin{itemize}
+            \item Farmers face two major challenges
+            \item A necessity to sequester carbon and methane emissions amassing one third of global emissions contributing to climate change. {\scriptsize\citep{Vermeulen2012, Crippa2021}} 
+            \begin{itemize}
+                \item While we are making transitions in the energy sector and transportation, limited change in agriculture.
+            \end{itemize}
+            \item Modern field management has depleted the macro-nutrients for soil health resulting in soil degradation and soil erosion {\scriptsize\citep{Lal2015, Louwagie2009, Montgomery2007, Jie2002}} 
+            \begin{itemize}
+                \item Over extraction of the land leaves farmers more vulnerable to climatic shocks (i.e., the American Dust Bowl).
+            \end{itemize}
+        \end{itemize}
+    \end{frame}
+    %
+    \begin{frame}
+    \fontfamily{cmr}
+    \frametitle{Regenerative Agriculture}
+        \begin{itemize}
+            \item The nascent concept of regenerative agriculture (RA) has promise in addressing both concerns {\scriptsize\citep{Paustian2016, LaCanne2018}}
+            \item A wide set of practices budding from the sustainable agriculture movement, RA practices are primarily aimed at reducing chemical inputs, minimizing disturbance of the soil, and integrating ecosystems into farmer plots. 
+            \item I focus on three related to carbon sequestration: 
+            \begin{itemize}
+                \item Cover cropping 
+                \item No till
+                \item Rotational grazing
+            \end{itemize} 
+            \item While there is evidence that these practices sequester carbon at small scale, it is unclear if they are profitable for adoption. {\scriptsize\citep{Ogle2019, Wood2021, Nunes2018, Briske2011, Briske2008, Bosch2008}}
+        \end{itemize}
+    \end{frame}
+    %
+    \begin{frame}[label = rotate graze]
+    \fontfamily{cmr}
+    \frametitle{Rotational Grazing}
+    \framesubtitle{
+    \hyperlink{alt. rotate graze}{\beamergotobutton{Alt. Diagram}}}
+        \centering 
+        \includegraphics[width = .8\textwidth]{images/diagram-rotate-graze.png}
+    \end{frame}
+    %
+    \begin{frame}
+    \fontfamily{cmr}
+    \frametitle{Research Questions}
+        \begin{enumerate}
+            \item 
+        \end{enumerate}
+    \end{frame}
+    %
+    \begin{frame}
+    \fontfamily{cmr}
+    \frametitle{This Paper}
+        \begin{enumerate}
+            \item 
+        \end{enumerate}
+    \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%      Data
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Data}
+    %
+    \begin{frame}
+    \fontfamily{cmr}
+    \frametitle{An Ideal Data Set}
+    \end{frame}
+    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%      Identification
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Identification}
+    %
+    \begin{frame}
+    \fontfamily{cmr}
+    \frametitle{Defining Treatment}
+    \end{frame}
+    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%          Results
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Results}
+    %
+    \begin{frame}
+    \fontfamily{cmr}
+    \frametitle{Preliminary Results}
+        \begin{itemize}
+            \item To estimate preliminary results without an instrument, I estimate TWFE with county and year fixed effects on MN. 
+        \end{itemize}
+        \begin{equation}
+            y_{ct} = \sum_{j}^3 \beta_j T_{jct} + \alpha_c + \tau_t + \varepsilon_{ct}
+        \end{equation}
+    \end{frame}
+    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%          Conclusions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusions}
+    \begin{frame}[label = contributions]
+    \fontfamily{cmr}
+    \frametitle{Summary}
+        \begin{itemize}
+            \item 
+        \end{itemize}
+    \end{frame}
+    %      
+    \begin{frame}[label = contributions]
+    \fontfamily{cmr}
+    \frametitle{Next Steps}
+        \begin{itemize}
+            \item Determine a suitable instrument
+            \item Construct a credible measure of SOC
+            \item Workshop the structural model of farmer behavior
+        \end{itemize}
+    \end{frame}
+    %  
+    \begin{frame}[label = conclusion]
+    \fontfamily{cmr}
+    \frametitle{The End}
+        \centering 
+        \Large{\emph{Thank You for Your Time!}} \\
+        \hspace{1.5cm} \\
+        \small{Contact: \textit{mcway005@umn.edu}} \\
+        \small{Website: \textit{mcwayrm.github.io}}
+    \end{frame}
+    %
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%           Appendix
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \appendix
+%     %
+%     \begin{frame}[label = alt. cover crop]
+%     \fontfamily{cmr}
+%     \frametitle{Cover Cropping Design}
+%     \framesubtitle{\hyperlink{cover crop}{\beamerreturnbutton{Cover Crop}}}
+%         \centering 
+%         \includegraphics[width = .7\textwidth]{images/diagram-cover-crop-02.jpg}
+%     \end{frame}
+
+    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%           Bibliography
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[allowframebreaks, noframenumbering]
+    \fontfamily{cmr}
+    \frametitle{References}
+    \footnotesize{
+    \bibliographystyle{chicago}
+    \bibliography{references.bib}
+    }
+\end{frame}
+
+\end{document}
