@@ -291,10 +291,28 @@ p4 <- ggplot(resid_yr, aes(x = year_num, y = mean_r)) +
   theme(plot.title = element_text(face = "bold"),
         panel.background = element_rect(fill = "#f9f9f9"))
 
+
+
 combined <- grid.arrange(p1, p2, p3, p4, ncol = 2,
   top = grid::textGrob(
     "Wisconsin County Panel — Per Acre Corn Yield Model (1995–2017)\nP = (a\u2080+a\u2081·OM)[1−(b\u2080+b\u2081·OM)·exp(−exp(c\u2080+c\u2081·OM)·N)]",
     gp = grid::gpar(fontsize = 13, fontface = "bold")))
+
+ggsave("./output/figures/figure_wi_model_plot_A.png",
+  p1,
+  width = 7, height = 5, dpi = 150, bg = "white")
+
+ggsave("./output/figures/figure_wi_model_plot_B.png",
+  p2,
+  width = 7, height = 5, dpi = 150, bg = "white")
+
+ggsave("./output/figures/figure_wi_model_plot_C.png",
+  p3,
+  width = 7, height = 5, dpi = 150, bg = "white")
+
+ggsave("./output/figures/figure_wi_model_plot_D.png",
+  p4,
+  width = 7, height = 5, dpi = 150, bg = "white")
 
 ggsave("./output/figures/figure_wi_model_visuals.png", 
     combined,
@@ -353,3 +371,72 @@ ggsave("./output/figures/figure_wi_model_contour_om_n.png",
   width = 10, height = 7, dpi = 180, bg = "white")
 
 write.csv(param_table, "./output/tables/table_wi_model_parameters.csv", row.names = FALSE)
+
+# Labeled parameter table for manuscript use
+param_table_labeled <- param_table |>
+  mutate(
+    Parameter_Display = c(
+      "$\\alpha_0$",
+      "$\\alpha_1$",
+      "$\\beta_0$",
+      "$\\beta_1$",
+      "$\\gamma_0$",
+      "$\\gamma_1$"
+    ),
+    Parameter_Label = c(
+    "Baseline Yield (bu/acre)",
+    "Yield increase per 1\\% OM",
+    "Decay Plateau Parameter",
+    "Decay Plateau Sensitivity to OM",
+    "Decay Rate (log scale)",
+    "Decay Rate Sensitivity to OM"
+  )) |>
+  select(Parameter, Parameter_Display, Parameter_Label, Estimate, Std_Error, t_value, p_value, CI_95_Low, CI_95_High)
+
+write.csv(param_table_labeled, "./output/tables/table_wi_model_parameters_labeled.csv", row.names = FALSE)
+
+# LaTeX export (booktabs style) for academic article tables
+latex_lines <- c(
+  "\\begin{table}[!htbp]",
+  "\\centering",
+  "\\caption{Model Parameter Estimates for Wisconsin Corn Yield}",
+  "\\label{tab:wi_model_params}",
+  "\\small",
+  "\\resizebox{\\textwidth}{!}{%",
+  "\\begin{tabular}{llrrrrrr}",
+  "\\toprule",
+  "Parameter & Interpretation & Estimate & Std. Error & t-value & p-value & 95\\% CI Low & 95\\% CI High \\\\",
+  "\\midrule"
+)
+
+for (i in seq_len(nrow(param_table_labeled))) {
+  row_i <- param_table_labeled[i, ]
+  latex_lines <- c(
+    latex_lines,
+    sprintf(
+      "%s & %s & %.5f & %.5f & %.3f & %.4f & %.5f & %.5f \\\\",
+      row_i$Parameter_Display,
+      row_i$Parameter_Label,
+      row_i$Estimate,
+      row_i$Std_Error,
+      row_i$t_value,
+      row_i$p_value,
+      row_i$CI_95_Low,
+      row_i$CI_95_High
+    )
+  )
+}
+
+latex_lines <- c(
+  latex_lines,
+  "\\bottomrule",
+  "\\end{tabular}",
+  "}",
+  "\\begin{tablenotes}[flushleft]",
+  "\\footnotesize",
+  "\\item Notes: $\\gamma_0$ and $\\gamma_1$ are estimated on the log scale through $\\gamma = \\exp(\\gamma_0 + \\gamma_1 \\cdot \\text{OM})$.",
+  "\\end{tablenotes}",
+  "\\end{table}"
+)
+
+writeLines(latex_lines, "./output/tables/table_wi_model_parameters.tex")

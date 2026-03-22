@@ -1,0 +1,24 @@
+\begin{table}[!htbp]
+\centering
+\caption{Model Parameter Estimates for Wisconsin Corn Yield}
+\label{tab:wi_model_params}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llccccccc}
+\toprule
+Parameter & Interpretation & Estimate & Std. Error & t-value & p-value & 95\% CI Low & 95\% CI High \\
+\midrule
+$\alpha_0$ & Baseline Yield (bu/acre) & 139.74030 & 3.45959 & 40.392 & 0.0000 & 132.95951 & 146.52109 \\
+$\alpha_1$ & Yield increase per 1\% OM & 0.06846 & 0.81697 & 0.084 & 0.9332 & -1.53279 & 1.66971 \\
+$\beta_0$ & Decay Plateau Parameter & 0.40676 & 0.21534 & 1.889 & 0.0591 & -0.01530 & 0.82883 \\
+$\beta_1$ & Decay Plateau Sensitivity to OM & 0.05840 & 0.12644 & 0.462 & 0.6442 & -0.18942 & 0.30623 \\
+$\gamma_0$ & Decay Rate (log scale) & -0.79374 & 0.60224 & -1.318 & 0.1877 & -1.97413 & 0.38665 \\
+$\gamma_1$ & Decay Rate Sensitivity to OM & 0.80591 & 0.18322 & 4.398 & 0.0000 & 0.44679 & 1.16503 \\
+\bottomrule
+\end{tabular}
+}
+\begin{tablenotes}[flushleft]
+\footnotesize
+\item Notes: $\gamma_0$ and $\gamma_1$ are estimated on the log scale through $\gamma = \exp(\gamma_0 + \gamma_1 \cdot \text{OM})$.
+\end{tablenotes}
+\end{table}

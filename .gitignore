@@ -8,3 +8,9 @@ nassqs-api-key.txt
 .Ruserdata
 *.Rproj
 
+# Slides: keep only source and rendered deck
+slides/*
+!slides/*.tex
+!slides/*.pdf
+!slides/*.bib
+

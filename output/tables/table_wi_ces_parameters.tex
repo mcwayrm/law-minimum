@@ -1,0 +1,24 @@
+\begin{table}[!htbp]
+\centering
+\caption{CES Model Parameter Estimates for Wisconsin Corn Yield}
+\label{tab:wi_ces_params}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llrrrrrr}
+\toprule
+Parameter & Interpretation & Estimate & Std. Error & t-value & p-value & 95\% CI Low & 95\% CI High \\
+\midrule
+$\alpha_0$ & Baseline Yield Shifter (bu/acre) & 111.17220 & 25691342.08155 & 0.000 & 1.0000 & -50354919.30765 & 50355141.65204 \\
+$\alpha_1$ & Yield Shifter Sensitivity to OM & -4.31681 & 997593.79038 & -0.000 & 1.0000 & -1955288.14595 & 1955279.51233 \\
+$\beta_0$ & Capital Composite Intercept & 1.01481 & 236175.68712 & 0.000 & 1.0000 & -462903.33194 & 462905.36156 \\
+$\beta_1$ & Capital Composite Sensitivity to OM & 0.13561 & 31561.29698 & 0.000 & 1.0000 & -61860.00646 & 61860.27769 \\
+$d$ (logit $\delta$) & Logit Share Parameter (logit $\delta$) & 4.95164 & 816552.60433 & 0.000 & 1.0000 & -1600438.15285 & 1600448.05613 \\
+$\rho$ & Substitution Parameter & 3.50859 & 1.28815 & 2.724 & 0.0065 & 0.98381 & 6.03338 \\
+\bottomrule
+\end{tabular}
+}
+\begin{tablenotes}[flushleft]
+\footnotesize
+\item Notes: Derived $\delta = 0.9930$ (input share), $\sigma = 0.2218$ (elasticity of substitution). $\delta$ recovered via $\delta = 1/(1+e^{-d})$.
+\end{tablenotes}
+\end{table}

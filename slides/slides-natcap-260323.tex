@@ -18,11 +18,6 @@
 \usetikzlibrary{decorations.fractals}
 % Allows to put greek letters outside of equations
 \usepackage{textgreek}
-% Allows for .gif
-\usepackage{movie15}
-\usepackage{epstopdf}
-\epstopdfDeclareGraphicsRule{.gif}{png}{.png}{convert gif:#1 png:\OutputFile}
-\AppendGraphicsExtensions{.gif}
 % Bibliography Style
 \usepackage[round]{natbib}
 % Change Text Color 
@@ -30,6 +25,7 @@
 
 % Allow to Color in Tables
 \usepackage{colortbl}
+\usepackage{threeparttable}
 % Allow for PDFs in Latex Document
     \usepackage{pdfpages}
 
@@ -72,7 +68,7 @@
 \setbeamercolor*{alerted text}{fg = GopherDarkMaroon} 
 \setbeamercolor*{example text}{fg = black} 
 \setbeamercolor*{structure}{fg = GopherDarkMaroon} 
- 
+
 \setbeamercolor*{palette tertiary}{fg = GopherMaroon,bg = black!10} 
 \setbeamercolor*{palette quaternary}{fg = black,bg = black!10} 
 
@@ -132,13 +128,13 @@
     \title[Law of the Minimum]{
     Soil Capital for Crop Production: \\ Law of the Minimum}
     \author[McWay]{ 
-        Ryan McWay$^\dagger$
+        Ryan McWay$^\dagger$ \and 
         Nicholas Gallagher
     }
     \date{
-    	Glewwe Development Lab \\ 
+    	NatCap TEEMs \\ 
     	\small{University of Minnesota} \\
-    	\small{\textit{\today}}
+    	\small{\textit{March 23rd, 2026}}
     }
     \institute[\textit{UMN}]{
         $^\dagger$\textit{Applied Economics, \\ 
@@ -157,7 +153,7 @@
 \section{Motivation}
     \begin{frame}
     \fontfamily{cmr}
-    \frametitle{Global Warming and Carbon Emissions}
+    \frametitle{Agriculture's Challenges}
         \begin{itemize}
             \item Farmers face two major challenges
             \item A necessity to sequester carbon and methane emissions amassing one third of global emissions contributing to climate change. {\scriptsize\citep{Vermeulen2012, Crippa2021}} 
@@ -173,44 +169,58 @@
     %
     \begin{frame}
     \fontfamily{cmr}
-    \frametitle{Regenerative Agriculture}
+    \frametitle{Soil Capital: Natural Capital vs. Agrochemicals}
         \begin{itemize}
-            \item The nascent concept of regenerative agriculture (RA) has promise in addressing both concerns {\scriptsize\citep{Paustian2016, LaCanne2018}}
-            \item A wide set of practices budding from the sustainable agriculture movement, RA practices are primarily aimed at reducing chemical inputs, minimizing disturbance of the soil, and integrating ecosystems into farmer plots. 
-            \item I focus on three related to carbon sequestration: 
+            \item We conjecture that soil capital, the natural capital of the soil, is a key input for crop production and a potential substitute for agrochemical inputs.
+            \item Soil capital is a stock of nutrients, organic matter, and microbial life that supports plant growth and ecosystem services.
+            \item Agrochemicals are synthetic inputs such as fertilizers, pesticides, and herbicides that enhance crop growth and protect against pests and diseases.
             \begin{itemize}
-                \item Cover cropping 
-                \item No till
-                \item Rotational grazing
-            \end{itemize} 
-            \item While there is evidence that these practices sequester carbon at small scale, it is unclear if they are profitable for adoption. {\scriptsize\citep{Ogle2019, Wood2021, Nunes2018, Briske2011, Briske2008, Bosch2008}}
+                \item While agrochemicals can boost yields in the short term, they can also degrade soil health and reduce long-term productivity.
+                \item Nitrogen fertilizer is the most widely used agrochemical input for crop production, but it also contributes to greenhouse gas emissions and water pollution. 
+            \end{itemize}
+            \item The law of the minimum states that crop yield is limited by the scarcest input, which may be soil capital or agrochemicals. {\scriptsize\citep{Brisson2010}}
+            \begin{itemize}
+                \item If soil capital is the limiting factor, then farmers can increase yields by investing in soil health rather than increasing agrochemical inputs.
+            \end{itemize}
         \end{itemize}
     \end{frame}
     %
-    \begin{frame}[label = rotate graze]
-    \fontfamily{cmr}
-    \frametitle{Rotational Grazing}
-    \framesubtitle{
-    \hyperlink{alt. rotate graze}{\beamergotobutton{Alt. Diagram}}}
-        \centering 
-        \includegraphics[width = .8\textwidth]{images/diagram-rotate-graze.png}
-    \end{frame}
-    %
+    % \begin{frame}
+    % \fontfamily{cmr}
+    % \frametitle{Regenerative Agriculture}
+    %     \begin{itemize}
+    %         \item The nascent concept of regenerative agriculture (RA) has promise in addressing both concerns {\scriptsize\citep{Paustian2016, LaCanne2018}}
+    %         \item A wide set of practices budding from the sustainable agriculture movement, RA practices are primarily aimed at reducing chemical inputs, minimizing disturbance of the soil, and integrating ecosystems into farmer plots. 
+    %         \item I focus on three related to carbon sequestration: 
+    %         \begin{itemize}
+    %             \item Cover cropping 
+    %             \item No till
+    %         \end{itemize} 
+    %         \item While there is evidence that these practices sequester carbon at small scale, it is unclear if they are profitable for adoption. {\scriptsize\citep{Ogle2019, Wood2021, Nunes2018, Briske2011, Briske2008, Bosch2008}}
+    %     \end{itemize}
+    % \end{frame}
+    % %
     \begin{frame}
     \fontfamily{cmr}
     \frametitle{Research Questions}
-        \begin{enumerate}
-            \item 
-        \end{enumerate}
+        \begin{block}{Research Questions}
+            \begin{enumerate}
+            \item Can we estimate the shifts in crop yields using soil capital as an input?
+            \begin{itemize}
+                \item Does it follow a CES production function or law of the minimum specification?
+            \end{itemize}
+            \item What is the tradeoff between soil capital and agrochemical inputs?
+            \end{enumerate}
+        \end{block}
     \end{frame}
     %
-    \begin{frame}
-    \fontfamily{cmr}
-    \frametitle{This Paper}
-        \begin{enumerate}
-            \item 
-        \end{enumerate}
-    \end{frame}
+    % \begin{frame}
+    % \fontfamily{cmr}
+    % \frametitle{This Paper}
+    %     \begin{enumerate}
+    %         \item 
+    %     \end{enumerate}
+    % \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Data
@@ -219,33 +229,241 @@
     %
     \begin{frame}
     \fontfamily{cmr}
-    \frametitle{An Ideal Data Set}
-    \end{frame}
-    %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%      Identification
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Identification}
-    %
-    \begin{frame}
-    \fontfamily{cmr}
-    \frametitle{Defining Treatment}
-    \end{frame}
-    %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%          Results
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Results}
-    %
-    \begin{frame}
-    \fontfamily{cmr}
-    \frametitle{Preliminary Results}
+    \frametitle{Data}
+    \begin{itemize}
+        \item UW Forage and Soil Lab's WIDATCP certified labs soil summaries
         \begin{itemize}
-            \item To estimate preliminary results without an instrument, I estimate TWFE with county and year fixed effects on MN. 
+            \item County-year panel for Wisconsin (1995--2017)
+            \item Mean organic matter (OM, \%)
         \end{itemize}
+        \item USDA NASS county corn grain yield (bu/acre) (1997 - 2017)
+        \item Nitrogen fertilizer (1987 - 2017)
+    \end{itemize}
+    \end{frame}
+    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%      Production Functions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Production Functions}
+    %
+    \begin{frame}
+    \fontfamily{cmr}
+    \frametitle{Production Functions}
+        \begin{itemize}
+            \item There are two reasonable specifications we may expect to model agricultural production. 
+        \end{itemize}
+        \begin{enumerate}
+            \item Constant Elasticity of Substitution (CES) Production Function:
+            \begin{itemize}
+                \item Common in economics literature as a flexible functional form that nests both perfect substitutes and perfect complements. 
+                \item However, it may not capture the nonlinearities in the yield response to inputs, especially if there are threshold effects or diminishing returns. 
+            \end{itemize}
+            \item Mitcherlich-Baule (Law of the Minimum) Specification:
+            \begin{itemize}
+                \item More consistent with agronomic theory and empirical evidence that crop yield is limited by the scarcest input. 
+                \item However, it may be more difficult to estimate and interpret, especially if there are interactions between inputs or unobserved heterogeneity across farms.
+            \end{itemize}
+        \end{enumerate}
+    \end{frame}
+    %
+    \begin{frame}
+    \fontfamily{cmr}
+    \frametitle{Inputs}
+    \begin{itemize}
+        \item Setting: Corn production in Wisconsin
+        \item Objective: Per Acre Corn Yields 
+        \item Key Inputs:
+        \begin{itemize}
+            \item Soil Capital: Mean Organic Matter (OM, \%)
+            \begin{itemize}
+                \item Ideal Level: 3-5\%, but many farmers have less than 2\% OM. {\scriptsize\citep{UMNExtSOM, UWExtA3588}}
+            \end{itemize}
+            \item Agrochemical Input: Nitrogen fertilizer per planted corn acre
+            \begin{itemize}
+                \item Ideal Level: 180 - 250 lbs/acre, but many farmers apply more than 300 lbs/acre. {\scriptsize\citep{NASS2022Corn, ERSFertilizer}}
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+    \end{frame}
+    %
+        \begin{frame}
+    \fontfamily{cmr}
+    \frametitle{Wisconsin Data and Outcome}
+        \begin{itemize}
+            \item County-year panel for Wisconsin (1995--2017)
+            \item Outcome: county corn grain yield (bu/acre)
+            \item Soil covariate: mean organic matter (OM, \%)
+            \item Fertilizer covariate: nitrogen per planted corn acre
+            \item Final nonlinear sample: 1,415 observations across 65 counties
+            \item Estimation via nonlinear least squares (Levenberg--Marquardt)
+        \end{itemize}
+    \end{frame}
+    %
+    \begin{frame}
+    \fontfamily{cmr}
+    \frametitle{CES Specification}
+    \begin{itemize}
+        \item Constant Elasticity of Substitution (CES) Specification:
         \begin{equation}
-            y_{ct} = \sum_{j}^3 \beta_j T_{jct} + \alpha_c + \tau_t + \varepsilon_{ct}
+            y_{ct} = A_{ct}\left[\delta K_{ct}^{-\rho} + (1-\delta)N_{ct}^{-\rho}\right]^{-\frac{1}{\rho}}
         \end{equation}
+        \item OM shifters:
+        \begin{equation}
+            A_{ct} = \alpha_0 + \alpha_1 OM_{ct}, \quad
+            K_{ct} = \beta_0 + \beta_1 OM_{ct}
+        \end{equation}
+        \item Parameter interpretation:
+        \begin{itemize}
+            \item $A_{ct}$: Hicks-neutral productivity shifter
+            \item $K_{ct}$: effective capital/input composite shifted by $OM_{ct}$
+            \item $N_{ct}$: second input in the CES aggregator
+            \item $\delta \in (0,1)$: share parameter between inputs
+            \item $\rho = \frac{\sigma - 1}{\sigma}$, so $\sigma = \frac{1}{1+\rho}$ is the elasticity of substitution
+        \end{itemize}
+    \end{itemize}
+    \end{frame}
+    %
+    
+    \begin{frame}
+    \fontfamily{cmr}
+    \frametitle{CES Specification}
+        \centering
+        \includegraphics[width = 0.9\textwidth]{../output/images/figure-ces.png}
+    \end{frame}
+    %
+    \begin{frame}
+    \fontfamily{cmr}
+    \frametitle{Law of the Minimum (LOM) Specification}
+    \begin{itemize}
+        \item Mitcherlich-Baule (Liebig's Law of the Minimum) Specification:
+    \end{itemize}
+    \begin{equation}    
+        y_{ct} = \alpha_{ct} \left(1 - \beta_{ct} \exp(-\gamma X) \right)
+    \end{equation}
+    \begin{itemize}
+        \item Specific Specification:
+    \end{itemize}
+    \begin{equation}    
+        y_{ct} = A_{ct}\!\left[1 - B_{ct}\,\exp\!\left(-C_{ct}\, N_{ct}\right)\right]
+    \end{equation}
+    \begin{equation*}
+        A_{ct} = \alpha_0 + \alpha_1 OM_{ct}, \quad
+        B_{ct} = \beta_0 + \beta_1 OM_{ct}, \quad
+        C_{ct} = e^{\gamma_0 + \gamma_1 OM_{ct}}
+    \end{equation*}
+    \begin{itemize}
+        \item where $X \in \{OM, N\}$ is the input subject to diminishing returns
+        \item $\alpha_{ct}$ is the baseline yield potential, $\beta_{ct}$ is the plateau parameter, and $\gamma$ is the decay rate of the yield response to $X$.
+        \item The law of the minimum implies that yield is limited by the scarcest input, which may be soil capital or agrochemicals.
+    \end{itemize}
+    \end{frame}
+    %
+    \begin{frame}
+    \fontfamily{cmr}
+    \frametitle{LOM Specification}
+        \centering
+        \includegraphics[width = 0.9\textwidth]{../output/images/figure-law-minimum.png}
+    \end{frame}
+    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%          Results: CES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Results: CES}
+    %
+    \begin{frame}[fragile]
+    \fontfamily{cmr}
+    \frametitle{CES Parameter Estimates}
+        \input{../output/tables/table_wi_ces_parameters.tex}
+    \end{frame}
+    %
+    \begin{frame}
+    \fontfamily{cmr}
+    \frametitle{CES Model Fit Summary}
+        \begin{itemize}
+            \item Pseudo-$R^2$: 0.0576
+            \item RMSE: 23.92
+            \item Residual SE: 23.97
+            \item Derived $\delta = 0.993$ (share weight on $K$); derived $\sigma = 0.222$ (elasticity of substitution)
+            \item Most parameters are statistically insignificant; model is poorly identified
+        \end{itemize}
+    \end{frame}
+    %
+    \begin{frame}
+    \fontfamily{cmr}
+    \frametitle{CES Results Visualized}
+        \centering
+        \includegraphics[width = 0.7\textwidth]{../output/figures/figure_wi_ces_visuals.png}
+    \end{frame}
+    %
+    \begin{frame}
+    \fontfamily{cmr}
+    \frametitle{CES OM--N Tradeoff Contours}
+        \centering
+        \includegraphics[width = 0.7\textwidth]{../output/figures/figure_wi_ces_contour_om_n.png}
+    \end{frame}
+    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%          Results: LOM
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Results: LOM}
+    %
+    \begin{frame}[fragile]
+    \fontfamily{cmr}
+    \frametitle{LOM Parameter Estimates}
+        \input{../output/tables/table_wi_model_parameters.tex}
+    \end{frame}
+    %
+    \begin{frame}
+    \fontfamily{cmr}
+    \frametitle{LOM Model Fit Summary}
+        \begin{itemize}
+            \item Pseudo-$R^2$: 0.0648
+            \item RMSE: 23.83 
+            \item Residual SE: 23.88 
+            \item Estimated decay sensitivity $\gamma_1 > 0$ and statistically significant
+        \end{itemize}
+    \end{frame}
+    %
+    \begin{frame}
+    \fontfamily{cmr}
+    \frametitle{LOM Results Visualized}
+        \centering
+        \includegraphics[width = 0.7\textwidth]{../output/figures/figure_wi_model_visuals.png}
+    \end{frame}
+    %
+    % \begin{frame}
+    % \fontfamily{cmr}
+    % \frametitle{LOM Results Plot A: Fitted vs Observed}
+    %     \centering
+    %     \includegraphics[width = 0.7\textwidth]{../output/figures/figure_wi_model_plot_A.png}
+    % \end{frame}
+    % %
+    % \begin{frame}
+    % \fontfamily{cmr}
+    % \frametitle{LOM Results Plot B: Yield Response Over OM}
+    %     \centering
+    %     \includegraphics[width = 0.7\textwidth]{../output/figures/figure_wi_model_plot_B.png}
+    % \end{frame}
+    % %
+    % \begin{frame}
+    % \fontfamily{cmr}
+    % \frametitle{LOM Results Plot C: Yield Response Over N}
+    %     \centering
+    %     \includegraphics[width = 0.7\textwidth]{../output/figures/figure_wi_model_plot_C.png}
+    % \end{frame}
+    % %
+    % \begin{frame}
+    % \fontfamily{cmr}
+    % \frametitle{LOM Results Plot D: Mean Residual by Year}
+    %     \centering
+    %     \includegraphics[width = 0.7\textwidth]{../output/figures/figure_wi_model_plot_D.png}
+    % \end{frame}
+    % %
+    \begin{frame}
+    \fontfamily{cmr}
+    \frametitle{LOM OM--N Tradeoff Contours}
+        \centering
+        \includegraphics[width = 0.7\textwidth]{../output/figures/figure_wi_model_contour_om_n.png}
     \end{frame}
     %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -256,7 +474,10 @@
     \fontfamily{cmr}
     \frametitle{Summary}
         \begin{itemize}
-            \item 
+            \item Comparison of two production function specifications: CES and LOM
+            \item LOM specification fits the data better and is more consistent with agronomic theory
+            \item Tradeoff contours suggest that soil capital can substitute for agrochemical inputs, but the degree of substitution depends on the levels of both inputs and the yield response to them.
+            \item The results have implications for farmers' decisions on how to invest in soil health and agrochemical inputs, as well as for policymakers' efforts to promote sustainable agriculture and reduce greenhouse gas emissions.
         \end{itemize}
     \end{frame}
     %      
@@ -264,9 +485,9 @@
     \fontfamily{cmr}
     \frametitle{Next Steps}
         \begin{itemize}
-            \item Determine a suitable instrument
-            \item Construct a credible measure of SOC
-            \item Workshop the structural model of farmer behavior
+            \item Explore some other soil macronutrients (e.g., soil pH, Potasium, Phosphorus)
+            \item Explore other crops and regions (e.g., soybeans, national state data)
+            \item Explore influence of regenerative agriculture practices on soil capital and yields (e.g., cover cropping, no till)
         \end{itemize}
     \end{frame}
     %  
